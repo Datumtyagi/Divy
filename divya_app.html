@@ -1,0 +1,1587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Divya — Daily Spiritual Companion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0A0812;
+  --surface: #120F22;
+  --surface2: #1C1830;
+  --border: rgba(244,166,35,0.18);
+  --border2: rgba(255,255,255,0.07);
+  --saffron: #F4A623;
+  --saffron-glow: rgba(244,166,35,0.12);
+  --saffron-dim: rgba(244,166,35,0.06);
+  --rose: #C9956A;
+  --cream: #FDF4E7;
+  --muted: rgba(253,244,231,0.45);
+  --dimmer: rgba(253,244,231,0.22);
+  --success: #5DBB8A;
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --sans: 'Inter', system-ui, sans-serif;
+  --r: 16px;
+  --r-lg: 22px;
+  --r-sm: 10px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; background: var(--bg); font-family: var(--sans); color: var(--cream); overflow: hidden; }
+
+/* ── SHELL ── */
+.shell {
+  width: 100%; max-width: 430px; height: 100vh;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg);
+}
+.shell::before {
+  content: '';
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse 60% 30% at 50% 0%, rgba(244,166,35,0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 40% at 80% 80%, rgba(201,149,106,0.04) 0%, transparent 60%);
+}
+
+/* ── SCREENS ── */
+.screen { position: absolute; inset: 0; display: none; flex-direction: column; z-index: 1; overflow: hidden; }
+.screen.active { display: flex; }
+
+/* ── TOPBAR ── */
+.topbar {
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 52px 20px 14px;
+  background: rgba(10,8,18,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 0.5px solid var(--border);
+  position: relative; z-index: 10;
+}
+.topbar-title { font-family: var(--serif); font-size: 20px; font-weight: 600; color: var(--cream); }
+.topbar-sub { font-size: 11px; color: var(--saffron); letter-spacing: 0.1em; text-transform: uppercase; }
+.icon-btn {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--surface); border: 0.5px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background .15s;
+  flex-shrink: 0;
+}
+.icon-btn:hover { background: var(--saffron-glow); }
+.icon-btn svg { width: 18px; height: 18px; stroke: var(--cream); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ── SCROLL BODY ── */
+.scroll-body {
+  flex: 1; overflow-y: auto; overflow-x: hidden;
+  padding: 20px 20px 110px;
+  -webkit-overflow-scrolling: touch;
+}
+.scroll-body::-webkit-scrollbar { display: none; }
+
+/* ── BOTTOM NAV ── */
+.bnav {
+  position: absolute; bottom: 0; left: 0; right: 0; z-index: 20;
+  display: flex; justify-content: space-around; align-items: center;
+  padding: 10px 0 28px;
+  background: rgba(10,8,18,0.92);
+  backdrop-filter: blur(24px);
+  border-top: 0.5px solid var(--border);
+}
+.bnav-item {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  cursor: pointer; padding: 4px 14px; border-radius: 12px;
+  transition: background .15s;
+}
+.bnav-item:hover { background: var(--saffron-dim); }
+.bnav-item svg { width: 22px; height: 22px; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: stroke .15s; }
+.bnav-item span { font-size: 10px; font-weight: 500; letter-spacing: 0.03em; transition: color .15s; }
+.bnav-item.on svg { stroke: var(--saffron); }
+.bnav-item.on span { color: var(--saffron); }
+.bnav-item:not(.on) svg { stroke: var(--dimmer); }
+.bnav-item:not(.on) span { color: var(--dimmer); }
+
+/* ── CHIPS / BADGES ── */
+.chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase;
+  padding: 3px 9px; border-radius: 20px;
+}
+.chip-gold { background: rgba(244,166,35,0.14); color: var(--saffron); border: 0.5px solid rgba(244,166,35,0.3); }
+.chip-rose { background: rgba(201,149,106,0.14); color: var(--rose); border: 0.5px solid rgba(201,149,106,0.3); }
+.chip-green { background: rgba(93,187,138,0.12); color: var(--success); border: 0.5px solid rgba(93,187,138,0.25); }
+
+/* ── CARDS ── */
+.card {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 16px;
+  margin-bottom: 12px;
+  transition: border-color .15s;
+}
+.card:hover { border-color: rgba(244,166,35,0.32); }
+
+/* ── SECTION LABEL ── */
+.sl {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--saffron); margin-bottom: 10px;
+}
+.sl-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.sl-row .sl { margin-bottom: 0; }
+.sl-row .see-all { font-size: 12px; color: var(--saffron); cursor: pointer; font-weight: 500; opacity: .8; }
+.sl-row .see-all:hover { opacity: 1; }
+
+/* ── DIVIDER ── */
+.hdiv { height: 0.5px; background: var(--border); margin: 16px 0; }
+
+/* ── INPUTS ── */
+.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+.field label { font-size: 11px; font-weight: 500; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+.field input, .field select {
+  background: var(--surface2); border: 0.5px solid var(--border2);
+  border-radius: var(--r-sm); padding: 13px 14px;
+  font-size: 15px; color: var(--cream); font-family: var(--sans);
+  outline: none; transition: border-color .2s;
+  -webkit-appearance: none;
+}
+.field input:focus, .field select:focus { border-color: var(--saffron); }
+.field input::placeholder { color: var(--dimmer); }
+.field select option { background: #1C1830; }
+
+/* ── BUTTONS ── */
+.btn {
+  width: 100%; padding: 15px; border-radius: var(--r);
+  font-size: 15px; font-weight: 600; font-family: var(--sans);
+  cursor: pointer; border: none; transition: transform .12s, opacity .12s;
+  letter-spacing: 0.02em;
+}
+.btn:active { transform: scale(0.97); }
+.btn-primary { background: var(--saffron); color: #0A0812; }
+.btn-primary:hover { opacity: .92; }
+.btn-ghost { background: transparent; color: var(--cream); border: 0.5px solid var(--border); }
+.btn-ghost:hover { background: var(--surface2); }
+.btn-danger { background: rgba(220,80,80,0.12); color: #E05555; border: 0.5px solid rgba(220,80,80,0.25); }
+
+/* ── TOAST ── */
+#toast {
+  position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
+  background: var(--saffron); color: #0A0812;
+  padding: 10px 20px; border-radius: 30px;
+  font-size: 13px; font-weight: 600; white-space: nowrap;
+  z-index: 9999; display: none; pointer-events: none;
+  animation: toastPop .25s ease;
+}
+@keyframes toastPop { from { opacity:0; transform: translateX(-50%) translateY(8px); } to { opacity:1; transform: translateX(-50%) translateY(0); } }
+
+/* ── MODAL SHEET ── */
+.sheet {
+  position: absolute; inset: 0; z-index: 50;
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(6px);
+  display: none; flex-direction: column; justify-content: flex-end;
+}
+.sheet.open { display: flex; }
+.sheet-body {
+  background: var(--surface);
+  border-radius: 28px 28px 0 0;
+  border-top: 0.5px solid var(--border);
+  padding: 0 20px 40px;
+  max-height: 90vh; overflow-y: auto;
+}
+.sheet-body::-webkit-scrollbar { display: none; }
+.sheet-handle { width: 36px; height: 4px; background: var(--border); border-radius: 2px; margin: 14px auto 20px; }
+.sheet-title { font-family: var(--serif); font-size: 22px; font-weight: 600; margin-bottom: 4px; }
+.sheet-sub { font-size: 13px; color: var(--muted); margin-bottom: 20px; line-height: 1.6; }
+
+/* ═══════════════════════════════
+   SCREEN: SPLASH
+═══════════════════════════════ */
+#s-splash {
+  align-items: center; justify-content: center;
+  background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(244,166,35,0.08), transparent 70%), var(--bg);
+}
+.splash-om { font-size: 80px; margin-bottom: 24px; animation: omPulse 3s ease-in-out infinite; }
+@keyframes omPulse { 0%,100%{transform:scale(1);opacity:.9} 50%{transform:scale(1.06);opacity:1} }
+.splash-name { font-family: var(--serif); font-size: 44px; font-weight: 700; color: var(--cream); margin-bottom: 6px; }
+.splash-tag { font-size: 13px; color: var(--muted); letter-spacing: 0.08em; margin-bottom: 48px; }
+.splash-btn { width: 200px; }
+
+/* ═══════════════════════════════
+   SCREEN: LOGIN / SIGNUP
+═══════════════════════════════ */
+#s-auth { overflow-y: auto; }
+.auth-body { padding: 60px 28px 40px; display: flex; flex-direction: column; gap: 0; min-height: 100%; }
+.auth-head { margin-bottom: 32px; }
+.auth-head .auth-icon { font-size: 32px; margin-bottom: 14px; }
+.auth-head h1 { font-family: var(--serif); font-size: 32px; font-weight: 700; margin-bottom: 6px; }
+.auth-head p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+.auth-toggle { text-align: center; font-size: 13px; color: var(--muted); margin-top: 18px; }
+.auth-toggle span { color: var(--saffron); cursor: pointer; font-weight: 600; }
+.auth-toggle span:hover { text-decoration: underline; }
+.auth-err { background: rgba(220,80,80,0.1); border: 0.5px solid rgba(220,80,80,0.25); border-radius: var(--r-sm); padding: 10px 14px; font-size: 13px; color: #E07070; margin-bottom: 12px; display: none; }
+.auth-err.show { display: block; }
+
+/* ═══════════════════════════════
+   SCREEN: ONBOARDING
+═══════════════════════════════ */
+#s-onboard { overflow-y: auto; }
+.onboard-body { padding: 52px 24px 40px; }
+.onboard-head { text-align: center; margin-bottom: 32px; }
+.onboard-head .step-dot-row { display: flex; gap: 6px; justify-content: center; margin-bottom: 24px; }
+.step-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--surface2); transition: background .3s; }
+.step-dot.on { background: var(--saffron); width: 22px; border-radius: 4px; }
+.onboard-head h2 { font-family: var(--serif); font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+.onboard-head p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+.deity-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+.deity-opt {
+  background: var(--surface2); border: 1.5px solid transparent;
+  border-radius: var(--r); padding: 16px 14px;
+  display: flex; align-items: center; gap: 12px;
+  cursor: pointer; transition: all .15s;
+}
+.deity-opt:hover { border-color: rgba(244,166,35,0.3); }
+.deity-opt.sel { border-color: var(--saffron); background: var(--saffron-glow); }
+.deity-opt .deity-icon { font-size: 26px; flex-shrink: 0; }
+.deity-opt .deity-name { font-size: 14px; font-weight: 500; }
+.deity-opt .deity-alt { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.lang-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 24px; }
+.lang-opt {
+  background: var(--surface2); border: 1.5px solid transparent;
+  border-radius: var(--r-sm); padding: 12px 8px; text-align: center;
+  cursor: pointer; font-size: 13px; font-weight: 500; transition: all .15s;
+}
+.lang-opt:hover { border-color: rgba(244,166,35,0.3); }
+.lang-opt.sel { border-color: var(--saffron); background: var(--saffron-glow); color: var(--saffron); }
+.notif-opt {
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--surface2); border: 0.5px solid var(--border2);
+  border-radius: var(--r); padding: 14px 16px; margin-bottom: 10px;
+  cursor: pointer;
+}
+.notif-opt-info .noi-title { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+.notif-opt-info .noi-sub { font-size: 12px; color: var(--muted); }
+.toggle {
+  width: 44px; height: 26px; border-radius: 13px;
+  background: var(--surface); border: 0.5px solid var(--border);
+  position: relative; cursor: pointer; transition: background .2s;
+  flex-shrink: 0;
+}
+.toggle.on { background: var(--saffron); border-color: var(--saffron); }
+.toggle::after {
+  content: ''; position: absolute;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: white; top: 2px; left: 2px;
+  transition: transform .2s; box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+.toggle.on::after { transform: translateX(18px); }
+
+/* ═══════════════════════════════
+   SCREEN: HOME
+═══════════════════════════════ */
+.home-greeting { margin-bottom: 18px; }
+.home-greeting .gday { font-size: 11px; color: var(--saffron); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 4px; }
+.home-greeting h2 { font-family: var(--serif); font-size: 28px; font-weight: 600; line-height: 1.15; }
+
+.tithi-strip {
+  display: flex; gap: 0; background: var(--surface);
+  border: 0.5px solid var(--border); border-radius: var(--r);
+  overflow: hidden; margin-bottom: 20px;
+}
+.tithi-cell { flex: 1; padding: 12px 14px; }
+.tithi-cell + .tithi-cell { border-left: 0.5px solid var(--border); }
+.tithi-cell .tc-label { font-size: 9px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; }
+.tithi-cell .tc-val { font-family: var(--serif); font-size: 16px; font-weight: 600; }
+.tithi-cell .tc-val.accent { color: var(--saffron); }
+
+.aarti-hero {
+  background: linear-gradient(135deg, #1C1040 0%, #2A1820 60%, #1A1430 100%);
+  border: 0.5px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 18px; margin-bottom: 20px;
+  display: flex; align-items: center; gap: 14px;
+  cursor: pointer; transition: border-color .15s;
+  position: relative; overflow: hidden;
+}
+.aarti-hero::before {
+  content: ''; position: absolute; top: -30px; right: -20px;
+  width: 100px; height: 100px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(244,166,35,0.12), transparent 70%);
+}
+.aarti-hero:hover { border-color: rgba(244,166,35,0.4); }
+.aarti-icon-wrap {
+  width: 56px; height: 56px; border-radius: 14px;
+  background: rgba(244,166,35,0.1); border: 0.5px solid rgba(244,166,35,0.25);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; flex-shrink: 0;
+}
+.aarti-info .ai-deity { font-size: 11px; color: var(--rose); letter-spacing: 0.06em; font-weight: 500; margin-bottom: 3px; }
+.aarti-info .ai-name { font-family: var(--serif); font-size: 20px; font-weight: 600; margin-bottom: 4px; }
+.aarti-info .ai-meta { font-size: 11px; color: var(--muted); }
+.play-circle {
+  margin-left: auto; flex-shrink: 0;
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--saffron);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: transform .15s;
+}
+.play-circle:hover { transform: scale(1.1); }
+.play-circle svg { width: 16px; height: 16px; fill: #0A0812; margin-left: 2px; }
+
+/* Wallpaper scroll */
+.wp-scroll { display: flex; gap: 10px; overflow-x: auto; margin: 0 -20px; padding: 0 20px 8px; scrollbar-width: none; }
+.wp-scroll::-webkit-scrollbar { display: none; }
+.wp-thumb {
+  flex-shrink: 0; width: 130px; height: 175px;
+  border-radius: var(--r); overflow: hidden; position: relative;
+  cursor: pointer; border: 0.5px solid var(--border);
+  transition: transform .2s;
+}
+.wp-thumb:active { transform: scale(0.96); }
+.wp-thumb .wp-bg { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 52px; }
+.wp-thumb .wp-info-ov { position: absolute; bottom: 0; left: 0; right: 0; padding: 10px 10px 8px; background: linear-gradient(to top, rgba(0,0,0,0.7), transparent); }
+.wp-thumb .wp-deity-sm { font-size: 10px; color: rgba(253,244,231,0.65); }
+.wp-thumb .wp-name-sm { font-family: var(--serif); font-size: 14px; font-weight: 600; line-height: 1.2; }
+.wp-type-tag { position: absolute; top: 8px; right: 8px; font-size: 9px; font-weight: 700; letter-spacing: 0.06em; padding: 2px 7px; border-radius: 20px; }
+.wp-type-image { background: rgba(0,0,0,0.45); color: var(--saffron); border: 0.5px solid rgba(244,166,35,0.3); }
+.wp-type-audio { background: rgba(0,0,0,0.45); color: var(--rose); border: 0.5px solid rgba(201,149,106,0.3); }
+
+/* Streak row */
+.streak-banner {
+  background: linear-gradient(90deg, rgba(244,166,35,0.1), rgba(201,149,106,0.06));
+  border: 0.5px solid var(--border);
+  border-radius: var(--r);
+  padding: 14px 16px; margin-bottom: 20px;
+  display: flex; align-items: center; gap: 14px;
+}
+.streak-num { font-family: var(--serif); font-size: 36px; font-weight: 700; color: var(--saffron); line-height: 1; }
+.streak-meta .sm-title { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+.streak-meta .sm-sub { font-size: 12px; color: var(--muted); }
+
+/* Panchang grid */
+.panch-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.panch-cell {
+  background: var(--surface); border: 0.5px solid var(--border);
+  border-radius: var(--r-sm); padding: 12px 10px; text-align: center;
+}
+.panch-cell .pc-icon { font-size: 18px; margin-bottom: 5px; }
+.panch-cell .pc-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 3px; }
+.panch-cell .pc-val { font-size: 12px; font-weight: 500; line-height: 1.3; }
+
+/* ═══════════════════════════════
+   SCREEN: WALLPAPERS
+═══════════════════════════════ */
+.filter-scroll { display: flex; gap: 8px; overflow-x: auto; margin: 0 -20px; padding: 0 20px 16px; scrollbar-width: none; }
+.filter-scroll::-webkit-scrollbar { display: none; }
+.filter-btn {
+  flex-shrink: 0; padding: 7px 16px; border-radius: 20px;
+  font-size: 12px; font-weight: 500; cursor: pointer;
+  background: var(--surface2); border: 0.5px solid var(--border2); color: var(--muted);
+  transition: all .15s; white-space: nowrap;
+}
+.filter-btn.on { background: rgba(244,166,35,0.12); border-color: rgba(244,166,35,0.4); color: var(--saffron); }
+.wp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.wp-card-lg {
+  border-radius: var(--r); overflow: hidden; position: relative;
+  cursor: pointer; border: 0.5px solid var(--border); transition: transform .2s;
+  aspect-ratio: 9/14;
+}
+.wp-card-lg:active { transform: scale(0.97); }
+.wp-card-lg .wc-bg { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 58px; }
+.wp-card-lg .wc-ov { position: absolute; bottom: 0; left: 0; right: 0; padding: 14px 12px 10px; background: linear-gradient(to top, rgba(0,0,0,0.75), transparent); }
+.wp-card-lg .wc-deity { font-size: 10px; color: rgba(253,244,231,0.6); margin-bottom: 2px; }
+.wp-card-lg .wc-name { font-family: var(--serif); font-size: 16px; font-weight: 600; }
+
+/* ═══════════════════════════════
+   SCREEN: AARTI
+═══════════════════════════════ */
+.aarti-list-item {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--surface); border: 0.5px solid var(--border);
+  border-radius: var(--r); padding: 14px; margin-bottom: 10px;
+  cursor: pointer; transition: border-color .15s;
+}
+.aarti-list-item:hover { border-color: rgba(244,166,35,0.35); }
+.ali-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; background: rgba(244,166,35,0.08); border: 0.5px solid var(--border); }
+.ali-info .ali-deity { font-size: 11px; color: var(--rose); font-weight: 500; margin-bottom: 2px; }
+.ali-info .ali-name { font-family: var(--serif); font-size: 17px; font-weight: 600; margin-bottom: 3px; }
+.ali-info .ali-meta { font-size: 11px; color: var(--muted); }
+.ali-play { margin-left: auto; flex-shrink: 0; width: 34px; height: 34px; border-radius: 50%; background: var(--surface2); border: 0.5px solid var(--border); display: flex; align-items: center; justify-content: center; }
+.ali-play svg { width: 14px; height: 14px; fill: var(--saffron); }
+.ali-fav { margin-left: 6px; cursor: pointer; }
+.ali-fav svg { width: 18px; height: 18px; stroke: var(--dimmer); fill: none; stroke-width: 1.8; }
+.ali-fav.faved svg { stroke: var(--saffron); fill: var(--saffron); }
+
+/* ═══════════════════════════════
+   SCREEN: PANCHANG
+═══════════════════════════════ */
+.festival-item {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 14px 0; border-bottom: 0.5px solid var(--border);
+}
+.festival-item:last-child { border-bottom: none; }
+.fest-date { text-align: center; min-width: 40px; }
+.fest-date .fd-day { font-family: var(--serif); font-size: 22px; font-weight: 700; color: var(--saffron); line-height: 1; }
+.fest-date .fd-mon { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; }
+.fest-info .fi-name { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+.fest-info .fi-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+/* ═══════════════════════════════
+   SCREEN: PROFILE
+═══════════════════════════════ */
+.profile-hero { text-align: center; padding: 12px 0 24px; }
+.profile-av {
+  width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 14px;
+  background: linear-gradient(135deg, var(--saffron), var(--rose));
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--serif); font-size: 36px; font-weight: 700; color: #0A0812;
+  border: 2.5px solid rgba(244,166,35,0.4);
+}
+.profile-name { font-family: var(--serif); font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+.profile-email { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
+.stat-row { display: flex; justify-content: center; gap: 28px; }
+.stat-cell { text-align: center; }
+.stat-cell .sc-num { font-family: var(--serif); font-size: 24px; font-weight: 700; color: var(--saffron); }
+.stat-cell .sc-label { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.menu-list { list-style: none; }
+.menu-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 0; border-bottom: 0.5px solid rgba(244,166,35,0.08);
+  cursor: pointer;
+}
+.menu-item:last-child { border-bottom: none; }
+.menu-item:hover .mi-label { color: var(--saffron); }
+.menu-item .mi-left { display: flex; align-items: center; gap: 12px; }
+.menu-item svg { width: 18px; height: 18px; stroke: var(--muted); fill: none; stroke-width: 1.8; stroke-linecap: round; flex-shrink: 0; }
+.menu-item .mi-label { font-size: 14px; color: rgba(253,244,231,0.85); }
+.menu-item .mi-arrow svg { stroke: var(--dimmer); }
+.menu-item.danger svg { stroke: #E05555; }
+.menu-item.danger .mi-label { color: #E05555; }
+
+/* ═══════════════════════════════
+   WALLPAPER DETAIL SHEET
+═══════════════════════════════ */
+.wp-detail-full { min-height: 300px; border-radius: 18px 18px 0 0; display: flex; align-items: center; justify-content: center; font-size: 90px; margin: 0 -20px; }
+.wp-detail-name { font-family: var(--serif); font-size: 28px; font-weight: 700; margin-bottom: 4px; margin-top: 18px; }
+.wp-detail-deity { font-size: 13px; color: var(--rose); font-weight: 500; letter-spacing: 0.06em; margin-bottom: 8px; }
+.wp-detail-desc { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 22px; }
+.wp-action-row { display: flex; gap: 10px; }
+.wp-action-row .btn { width: auto; flex: 1; padding: 14px 12px; display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 13px; }
+.wp-action-row .btn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; }
+.btn-primary svg { stroke: #0A0812; }
+.btn-share-sm { flex: 0 !important; width: 52px !important; padding: 14px 0 !important; background: var(--surface2); border: 0.5px solid var(--border); color: var(--muted); }
+.btn-share-sm span { font-size: 11px; color: var(--dimmer); }
+
+/* ═══════════════════════════════
+   AARTI PLAYER SHEET
+═══════════════════════════════ */
+.player-icon { font-size: 56px; text-align: center; margin: 8px 0 12px; }
+.player-name { font-family: var(--serif); font-size: 26px; font-weight: 700; text-align: center; margin-bottom: 4px; }
+.player-deity { text-align: center; font-size: 13px; color: var(--rose); letter-spacing: 0.06em; margin-bottom: 20px; }
+.player-lyrics {
+  background: var(--surface2); border: 0.5px solid var(--border2);
+  border-radius: var(--r); padding: 16px; margin-bottom: 20px;
+  max-height: 180px; overflow-y: auto; line-height: 1.9;
+  font-size: 14px; color: rgba(253,244,231,0.75);
+}
+.player-lyrics::-webkit-scrollbar { display: none; }
+.player-controls { display: flex; align-items: center; justify-content: center; gap: 28px; margin-bottom: 8px; }
+.pc-btn { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--surface2); border: 0.5px solid var(--border); cursor: pointer; }
+.pc-btn svg { width: 18px; height: 18px; stroke: var(--muted); fill: none; stroke-width: 1.8; stroke-linecap: round; }
+.pc-play-main { width: 58px; height: 58px; border-radius: 50%; background: var(--saffron); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.pc-play-main svg { width: 22px; height: 22px; fill: #0A0812; margin-left: 3px; }
+.pc-play-main.playing svg { margin-left: 0; }
+.pc-progress { margin-top: 16px; }
+.pc-bar { height: 3px; background: var(--surface2); border-radius: 2px; overflow: hidden; cursor: pointer; }
+.pc-fill { height: 100%; background: var(--saffron); border-radius: 2px; width: 0%; transition: width .5s linear; }
+.pc-times { display: flex; justify-content: space-between; font-size: 11px; color: var(--dimmer); margin-top: 6px; }
+.pc-fav-row { display: flex; justify-content: center; gap: 16px; margin-top: 16px; }
+.pc-fav-btn { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); cursor: pointer; padding: 8px 16px; border-radius: 20px; background: var(--surface2); border: 0.5px solid var(--border); }
+.pc-fav-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+.pc-fav-btn.faved { color: var(--saffron); border-color: rgba(244,166,35,0.3); background: var(--saffron-glow); }
+
+/* ═══════════════════════════════
+   LOADER
+═══════════════════════════════ */
+.loader-overlay { position: absolute; inset: 0; z-index: 200; background: var(--bg); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 14px; }
+.loader-om { font-size: 40px; animation: omPulse 1.5s ease-in-out infinite; }
+.loader-text { font-size: 13px; color: var(--muted); }
+
+/* ═══════════════════════════════
+   EDIT PROFILE SHEET
+═══════════════════════════════ */
+#editProfileSheet .sheet-body { padding: 0 20px 40px; }
+</style>
+</head>
+<body>
+<div class="shell" id="app">
+
+<!-- ── LOADER ── -->
+<div class="loader-overlay" id="loader">
+  <div class="loader-om">🕉️</div>
+  <div class="loader-text">Loading your sanctuary…</div>
+</div>
+
+<!-- ───────────── SPLASH ───────────── -->
+<div class="screen" id="s-splash">
+  <div class="splash-om">🕉️</div>
+  <div class="splash-name">Divya</div>
+  <div class="splash-tag">Your daily spiritual companion</div>
+  <button class="btn btn-primary splash-btn" onclick="goTo('s-auth','login')">Begin your journey</button>
+</div>
+
+<!-- ───────────── AUTH ───────────── -->
+<div class="screen" id="s-auth">
+  <div class="auth-body" id="authBody">
+    <div class="auth-head">
+      <div class="auth-icon" id="authIcon">🙏</div>
+      <h1 id="authTitle">Welcome back</h1>
+      <p id="authSubtitle">Sign in to continue your daily practice</p>
+    </div>
+    <div class="auth-err" id="authErr"></div>
+    <div id="loginForm">
+      <div class="field"><label>Email</label><input id="li-email" type="email" placeholder="your@email.com"></div>
+      <div class="field"><label>Password</label><input id="li-pass" type="password" placeholder="••••••••"></div>
+      <button class="btn btn-primary" style="margin-top:8px" onclick="doLogin()">Sign in</button>
+      <div class="auth-toggle">New here? <span onclick="switchToSignup()">Create account →</span></div>
+    </div>
+    <div id="signupForm" style="display:none">
+      <div class="field"><label>Full name</label><input id="su-name" type="text" placeholder="e.g. Priya Sharma"></div>
+      <div class="field"><label>Email</label><input id="su-email" type="email" placeholder="your@email.com"></div>
+      <div class="field"><label>Password</label><input id="su-pass" type="password" placeholder="At least 6 characters"></div>
+      <div class="field">
+        <label>City / Location</label>
+        <input id="su-city" type="text" placeholder="e.g. Mumbai, Bengaluru, Dubai">
+      </div>
+      <button class="btn btn-primary" style="margin-top:8px" onclick="doSignup()">Create account</button>
+      <div class="auth-toggle">Already have an account? <span onclick="switchToLogin()">Sign in →</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ───────────── ONBOARDING ───────────── -->
+<div class="screen" id="s-onboard">
+  <div class="onboard-body">
+    <div class="onboard-head">
+      <div class="step-dot-row">
+        <div class="step-dot on" id="od0"></div>
+        <div class="step-dot" id="od1"></div>
+        <div class="step-dot" id="od2"></div>
+      </div>
+      <h2 id="onboardTitle">Choose your deity</h2>
+      <p id="onboardSub">We'll personalise your daily aarti and content around your chosen deity</p>
+    </div>
+    <div id="onboardStep0">
+      <div class="deity-grid" id="deityGrid"></div>
+      <button class="btn btn-primary" onclick="onboardNext(0)">Continue</button>
+    </div>
+    <div id="onboardStep1" style="display:none">
+      <div class="lang-grid" id="langGrid"></div>
+      <button class="btn btn-primary" onclick="onboardNext(1)">Continue</button>
+    </div>
+    <div id="onboardStep2" style="display:none">
+      <div id="notifOpts"></div>
+      <button class="btn btn-primary" onclick="onboardNext(2)">Start my journey 🙏</button>
+    </div>
+  </div>
+</div>
+
+<!-- ───────────── HOME ───────────── -->
+<div class="screen" id="s-home">
+  <div class="scroll-body">
+    <div class="home-greeting">
+      <div class="gday" id="homeGreetTime">Good morning · 🙏</div>
+      <h2 id="homeGreetName">Loading…</h2>
+    </div>
+    <div class="tithi-strip" id="tithiStrip">
+      <div class="tithi-cell"><div class="tc-label">Tithi</div><div class="tc-val" id="hTithi">—</div></div>
+      <div class="tithi-cell"><div class="tc-label">Nakshatra</div><div class="tc-val" id="hNakshatra">—</div></div>
+      <div class="tithi-cell"><div class="tc-label">Next festival</div><div class="tc-val accent" id="hFestival">—</div></div>
+    </div>
+    <div class="sl">Today's Aarti</div>
+    <div class="aarti-hero" id="homeAartiHero">
+      <div class="aarti-icon-wrap" id="homeAartiIcon">🪔</div>
+      <div class="aarti-info">
+        <div class="ai-deity" id="homeAartiDeity">—</div>
+        <div class="ai-name" id="homeAartiName">—</div>
+        <div class="ai-meta">Tap to play · Lyrics included</div>
+      </div>
+      <div class="play-circle" id="homePlayBtn">
+        <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+      </div>
+    </div>
+    <div class="sl-row">
+      <div class="sl">Sacred Wallpapers</div>
+      <span class="see-all" onclick="navTo('wallpapers')">See all</span>
+    </div>
+    <div class="wp-scroll" id="homeWpScroll"></div>
+    <div class="hdiv"></div>
+    <div class="sl" style="margin-top:16px">Your Streak</div>
+    <div class="streak-banner">
+      <div style="font-size:32px">🔥</div>
+      <div class="streak-meta">
+        <div style="display:flex;align-items:baseline;gap:8px"><span class="streak-num" id="streakNum">0</span><span style="font-size:13px;color:var(--muted)">day streak</span></div>
+        <div class="sm-sub" id="streakSub">Open the app daily to build your practice</div>
+      </div>
+    </div>
+    <div class="sl">Today's Panchang</div>
+    <div class="panch-grid" id="panchGrid"></div>
+    <div style="height:20px"></div>
+  </div>
+  <nav class="bnav" id="homeNav"></nav>
+</div>
+
+<!-- ───────────── WALLPAPERS ───────────── -->
+<div class="screen" id="s-wallpapers">
+  <div class="topbar">
+    <div><div class="topbar-sub">Gallery</div><div class="topbar-title">Sacred Wallpapers</div></div>
+    <div class="icon-btn" onclick="navTo('home')"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+  </div>
+  <div class="scroll-body">
+    <div class="filter-scroll" id="wpFilters"></div>
+    <div class="wp-grid" id="wpGrid"></div>
+  </div>
+  <nav class="bnav" id="wpNav"></nav>
+</div>
+
+<!-- ───────────── AARTI ───────────── -->
+<div class="screen" id="s-aarti">
+  <div class="topbar">
+    <div><div class="topbar-sub">Library</div><div class="topbar-title">Aarti & Mantras</div></div>
+  </div>
+  <div class="scroll-body">
+    <div class="filter-scroll" id="aartiFilters"></div>
+    <div id="aartiList"></div>
+  </div>
+  <nav class="bnav" id="aartiNav"></nav>
+</div>
+
+<!-- ───────────── PANCHANG ───────────── -->
+<div class="screen" id="s-panchang">
+  <div class="topbar">
+    <div><div class="topbar-sub">Hindu Calendar</div><div class="topbar-title">Panchang</div></div>
+  </div>
+  <div class="scroll-body">
+    <div class="card" id="panchDetailCard" style="margin-bottom:20px">
+      <div style="font-size:13px;color:var(--muted);margin-bottom:2px" id="panchDateLabel">—</div>
+      <div style="font-family:var(--serif);font-size:22px;font-weight:600;margin-bottom:14px" id="panchTitleLabel">Today's Panchang</div>
+      <div class="panch-grid" id="panchGridFull"></div>
+    </div>
+    <div class="sl" style="margin-top:4px">Upcoming Festivals</div>
+    <div id="festivalList"></div>
+  </div>
+  <nav class="bnav" id="panchNav"></nav>
+</div>
+
+<!-- ───────────── PROFILE ───────────── -->
+<div class="screen" id="s-profile">
+  <div class="topbar">
+    <div><div class="topbar-sub">Account</div><div class="topbar-title">My Profile</div></div>
+  </div>
+  <div class="scroll-body">
+    <div class="profile-hero">
+      <div class="profile-av" id="profAv">A</div>
+      <div class="profile-name" id="profName">—</div>
+      <div class="profile-email" id="profEmail">—</div>
+      <div class="stat-row">
+        <div class="stat-cell"><div class="sc-num" id="profStreak">0</div><div class="sc-label">Day streak</div></div>
+        <div class="stat-cell"><div class="sc-num" id="profFavs">0</div><div class="sc-label">Favourites</div></div>
+        <div class="stat-cell"><div class="sc-num" id="profDays">1</div><div class="sc-label">Days joined</div></div>
+      </div>
+    </div>
+    <div class="hdiv"></div>
+    <div class="sl">Your preferences</div>
+    <div class="card" style="margin-bottom:20px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span style="font-size:13px;color:var(--muted)">Preferred Deity</span>
+        <span style="font-size:14px;font-weight:600" id="profDeity">—</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span style="font-size:13px;color:var(--muted)">Language</span>
+        <span style="font-size:14px;font-weight:600" id="profLang">—</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:13px;color:var(--muted)">Location</span>
+        <span style="font-size:14px;font-weight:600" id="profCity">—</span>
+      </div>
+    </div>
+    <ul class="menu-list">
+      <li class="menu-item" onclick="openSheet('editProfileSheet')">
+        <div class="mi-left"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="mi-label">Edit profile</span></div>
+        <div class="mi-arrow"><svg viewBox="0 0 24 24" style="stroke:var(--dimmer)"><polyline points="9,18 15,12 9,6"/></svg></div>
+      </li>
+      <li class="menu-item" onclick="openSheet('favSheet')">
+        <div class="mi-left"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg><span class="mi-label">My favourites</span></div>
+        <div class="mi-arrow"><svg viewBox="0 0 24 24"><polyline points="9,18 15,12 9,6"/></svg></div>
+      </li>
+      <li class="menu-item" onclick="openSheet('notifSheet')">
+        <div class="mi-left"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg><span class="mi-label">Notifications</span></div>
+        <div class="mi-arrow"><svg viewBox="0 0 24 24"><polyline points="9,18 15,12 9,6"/></svg></div>
+      </li>
+      <li class="menu-item danger" onclick="doLogout()">
+        <div class="mi-left"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span class="mi-label">Sign out</span></div>
+      </li>
+    </ul>
+  </div>
+  <nav class="bnav" id="profNav"></nav>
+</div>
+
+<!-- ───────────── SHEETS ───────────── -->
+
+<!-- Wallpaper detail -->
+<div class="sheet" id="wpSheet">
+  <div class="sheet-body">
+    <div class="sheet-handle"></div>
+    <div class="wp-detail-full" id="wdsImg"></div>
+    <div class="wp-detail-deity" id="wdsDeity"></div>
+    <div class="wp-detail-name" id="wdsName"></div>
+    <div class="wp-detail-desc" id="wdsDesc"></div>
+    <div class="wp-action-row">
+      <button class="btn btn-primary" onclick="setWP('Home Screen')">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        Home Screen
+      </button>
+      <button class="btn btn-ghost" onclick="setWP('Lock Screen')">
+        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        Lock Screen
+      </button>
+      <button class="btn btn-share-sm btn-ghost" onclick="shareWP()">
+        <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        <span>Share</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Aarti player -->
+<div class="sheet" id="playerSheet">
+  <div class="sheet-body">
+    <div class="sheet-handle"></div>
+    <div class="player-icon" id="plIcon">🪔</div>
+    <div class="player-name" id="plName">—</div>
+    <div class="player-deity" id="plDeity">—</div>
+    <div class="player-lyrics" id="plLyrics"></div>
+    <div class="player-controls">
+      <div class="pc-btn" onclick="prevAarti()"><svg viewBox="0 0 24 24"><polygon points="19,20 9,12 19,4"/><line x1="5" y1="19" x2="5" y2="5"/></svg></div>
+      <div class="pc-play-main" id="pcPlayBtn" onclick="togglePlay()">
+        <svg id="pcPlayIcon" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+      </div>
+      <div class="pc-btn" onclick="nextAarti()"><svg viewBox="0 0 24 24"><polygon points="5,4 15,12 5,20"/><line x1="19" y1="5" x2="19" y2="19"/></svg></div>
+    </div>
+    <div class="pc-progress">
+      <div class="pc-bar"><div class="pc-fill" id="pcFill"></div></div>
+      <div class="pc-times"><span id="pcCurr">0:00</span><span id="pcTotal">4:30</span></div>
+    </div>
+    <div class="pc-fav-row">
+      <div class="pc-fav-btn" id="pcFavBtn" onclick="toggleFavAarti()">
+        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        Add to favourites
+      </div>
+      <div class="pc-fav-btn" onclick="closeSheet('playerSheet')">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        Close
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit profile -->
+<div class="sheet" id="editProfileSheet">
+  <div class="sheet-body">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Edit Profile</div>
+    <div class="sheet-sub">Your changes are saved instantly</div>
+    <div class="field"><label>Full name</label><input id="ep-name" type="text"></div>
+    <div class="field"><label>City</label><input id="ep-city" type="text"></div>
+    <div class="field">
+      <label>Preferred Deity</label>
+      <select id="ep-deity"></select>
+    </div>
+    <div class="field">
+      <label>Language</label>
+      <select id="ep-lang">
+        <option value="Hindi">Hindi</option>
+        <option value="English">English</option>
+        <option value="Marathi">Marathi</option>
+        <option value="Tamil">Tamil</option>
+        <option value="Telugu">Telugu</option>
+        <option value="Gujarati">Gujarati</option>
+      </select>
+    </div>
+    <button class="btn btn-primary" style="margin-top:8px" onclick="saveProfile()">Save changes</button>
+    <button class="btn btn-ghost" style="margin-top:10px" onclick="closeSheet('editProfileSheet')">Cancel</button>
+  </div>
+</div>
+
+<!-- Favourites -->
+<div class="sheet" id="favSheet">
+  <div class="sheet-body">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">My Favourites</div>
+    <div class="sheet-sub">Aartis you've saved for quick access</div>
+    <div id="favList"></div>
+  </div>
+</div>
+
+<!-- Notifications -->
+<div class="sheet" id="notifSheet">
+  <div class="sheet-body">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Notifications</div>
+    <div class="sheet-sub">Customise your daily spiritual reminders</div>
+    <div id="notifSettingsList"></div>
+    <button class="btn btn-primary" style="margin-top:16px" onclick="saveNotifs()">Save preferences</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+</div><!-- /shell -->
+
+<script>
+// ═══════════════════════════════════════
+// DATA LAYER
+// ═══════════════════════════════════════
+
+const DEITIES = [
+  { id:'ganesha', name:'Ganesha', alt:'Vighnaharta', icon:'🐘' },
+  { id:'krishna', name:'Krishna', alt:'Murlidhar', icon:'🪈' },
+  { id:'durga',   name:'Durga',   alt:'Mahashakti', icon:'⚡' },
+  { id:'hanuman', name:'Hanuman', alt:'Bajrangbali', icon:'🙏' },
+  { id:'shiva',   name:'Shiva',   alt:'Mahadev',   icon:'🔱' },
+  { id:'vishnu',  name:'Vishnu',  alt:'Narayana',  icon:'🌸' },
+  { id:'lakshmi', name:'Lakshmi', alt:'Mahalakshmi',icon:'🪷' },
+  { id:'saraswati',name:'Saraswati',alt:'Vagdevi',  icon:'🎶' }
+];
+
+const AARTIS = [
+  { id:'a1', deity:'ganesha', name:'Jai Ganesh Deva',       icon:'🐘', duration:'4:30', lyrics:`Jai Ganesh, Jai Ganesh, Jai Ganesh deva\nMata jaaki Parvati, pita Mahadeva\n\nEkadant dayavant, char bhujadhara\nMaathe sindur sohe, muse ki savara\n\nAndhan ko aankh det, kodhin ko kaaya\nBanjhan ko putra det, nirdhan ko maya\n\nJai Ganesh, Jai Ganesh, Jai Ganesh deva` },
+  { id:'a2', deity:'krishna', name:'Aarti Kunj Bihari Ki',  icon:'🪈', duration:'5:00', lyrics:`Aarti Kunj Bihari ki,\nShri Girdhar Krishna Murari ki\n\nGale mein baijayanti mala,\nBajave murali madhur bala\n\nShravana mein kundal jhalkahi,\nNaina vishaal kajal darshahi\n\nAarti Kunj Bihari ki,\nShri Girdhar Krishna Murari ki` },
+  { id:'a3', deity:'durga',   name:'Jai Ambe Gauri',        icon:'⚡', duration:'5:45', lyrics:`Jai Ambe Gauri, maiya jai Shyama Gauri\nTumko nishadin dhyavat, Hari Brahma Shivari\n\nMaang sindoor virajat, tiko mrigamada ko\nUjjval se dou nainana, chandravadan niko\n\nKanika kumkum rekhat, naksh mukh ruchir\nKoti chandra lajjawant, trishul ke dhare` },
+  { id:'a4', deity:'hanuman', name:'Aarti Hanuman Lala Ki', icon:'🙏', duration:'4:15', lyrics:`Aarti kije Hanuman lala ki\nDushta dalan Raghunath kala ki\n\nJaake bal se girivar kaanpe\nRog dosh jake nikat na jhaanke\n\nAnjanee putra mahaa bal daai\nSantan ke prabhu sadaa sahaai\n\nDe biruda raama ke\nSunahu shoor mana ke` },
+  { id:'a5', deity:'shiva',   name:'Om Jai Shiv Onkara',    icon:'🔱', duration:'6:00', lyrics:`Om Jai Shiv Onkara, swami jai Shiv Onkara\nBrahma Vishnu Sadashiv, Ardhangi dhara\n\nEkanan, Chaturanan, Panchanana Raje\nHansanan, Garurasan, Vrishavahan saaje\n\nDo bhujan char chaturbhuj, dasha bhuj ati sohe\nTino roop nirakhta, tribhuvan jan mohe` },
+  { id:'a6', deity:'vishnu',  name:'Om Jai Jagdish Hare',   icon:'🌸', duration:'5:30', lyrics:`Om jai Jagdish hare, swami jai Jagdish hare\nBhakt janon ke sankat, kshan mein door kare\n\nJo dhyave phal pave, dukh binase man ka\nSukh sampati ghar aave, kashtha mite tan ka\n\nMaat pita tum mere, sharan padoon main kiske\nTum bina aur na dooja, aas karoon jis ki` },
+  { id:'a7', deity:'lakshmi', name:'Jai Laxmi Mata',        icon:'🪷', duration:'4:45', lyrics:`Jai Laxmi mata, maiya jai Laxmi mata\nTumko nishadin dhyavat, Hari Vishnu dhata\n\nUma, Rama, Brahmaani, tum hi jagmaata\nSurya chandrama dhyavat, Narad Rishi gaata\n\nDurga roop niranjana, sukh sampati data\nJo koi tumko dhyata, Riddhi-Siddhi data` },
+  { id:'a8', deity:'saraswati',name:'Jai Saraswati Mata',   icon:'🎶', duration:'4:00', lyrics:`Jai Saraswati Mata, jai Saraswati Mata\nSadguna vaibava shaali, rupa chatura chita\n\nAmba shyama sundara, chatura chatura\nGaura varna vishiste, shubhaa varade\n\nVeenapustaka dharini, abhaya varade\nShirshasana dhari gaala, jaya vandita` }
+];
+
+const WALLPAPERS = [
+  { id:'w1', deity:'ganesha', name:'Vighnaharta',   icon:'🐘', bg:'linear-gradient(160deg,#1A0E2E,#2D1B4A,#4A2010)', type:'image', desc:'Remover of obstacles, bringer of wisdom. Begin every endeavour with his blessing.' },
+  { id:'w2', deity:'krishna', name:'Murlidhar',     icon:'🪈', bg:'linear-gradient(160deg,#0D1F2D,#1A3A2A,#2D2010)', type:'audio', desc:'The divine flute player, enchanting all creation with his melody of love and eternal wisdom.' },
+  { id:'w3', deity:'durga',   name:'Mahashakti',    icon:'⚡', bg:'linear-gradient(160deg,#2D0A1A,#4A1830,#1A1050)', type:'image', desc:'The supreme feminine power who destroys evil and protects righteousness.' },
+  { id:'w4', deity:'hanuman', name:'Bajrangbali',   icon:'🙏', bg:'linear-gradient(160deg,#1A2A0D,#2A3A10,#3A2800)', type:'audio', desc:'Embodiment of devotion, strength, and selfless service. His name dispels all fears.' },
+  { id:'w5', deity:'shiva',   name:'Mahadev',       icon:'🔱', bg:'linear-gradient(160deg,#0D1A2D,#1A2840,#2A1A00)', type:'image', desc:'The destroyer and transformer who holds the cosmos in eternal balance.' },
+  { id:'w6', deity:'vishnu',  name:'Narayana',      icon:'🌸', bg:'linear-gradient(160deg,#0A1A25,#1A2A1A,#251500)', type:'image', desc:'The preserver and protector of the universe, the source of all existence.' },
+  { id:'w7', deity:'lakshmi', name:'Mahalakshmi',   icon:'🪷', bg:'linear-gradient(160deg,#25100A,#3A1818,#1A0A25)', type:'audio', desc:'Goddess of wealth, fortune, and beauty — her grace transforms every home.' },
+  { id:'w8', deity:'saraswati',name:'Vagdevi',      icon:'🎶', bg:'linear-gradient(160deg,#0A1A1A,#0A2510,#1A0A20)', type:'image', desc:'Goddess of learning, art and wisdom. Her blessing illuminates the seeker\'s path.' }
+];
+
+const PANCHANG_DATA = {
+  tithi: 'Ekadashi', nakshatra: 'Rohini', yoga: 'Siddha',
+  karana: 'Bava', sunrise: '6:02 AM', sunset: '6:48 PM',
+  rahukaal: '4:30 – 6:00 PM', shubhMuhurta: '7:00 – 9:00 AM',
+  auspicious: 'Abhijit · 12:00–12:48 PM'
+};
+
+const FESTIVALS = [
+  { day:13, month:'Jun', name:'Ekadashi', desc:'Sacred fasting day dedicated to Lord Vishnu. Abstain from grains and observe puja.' },
+  { day:17, month:'Jun', name:'Purnima', desc:'Full moon night — most auspicious for prayers, river bathing and charity.' },
+  { day:27, month:'Jun', name:'Ashadhi Ekadashi', desc:'Beginning of Chaturmas. Start of the most holy period in the Vaishnava calendar.' },
+  { day:6,  month:'Jul', name:'Guru Purnima', desc:'Day to honour your spiritual teacher. Offer prayers and seek blessings.' },
+  { day:8,  month:'Jul', name:'Amavasya', desc:'New moon — offer tarpan to ancestors. Light a diya and offer water.' },
+  { day:17, month:'Jul', name:'Hariyali Teej', desc:'Celebrated by married women for the well-being of their husbands.' }
+];
+
+const LANGS = ['Hindi','English','Marathi','Tamil','Telugu','Gujarati'];
+const NOTIFS_DEF = [
+  { id:'n1', title:'Morning puja reminder', sub:'Daily at 6:00 AM', on:true },
+  { id:'n2', title:'Festival alerts',       sub:'2 days before each festival', on:true },
+  { id:'n3', title:'Ekadashi reminder',     sub:'On Ekadashi days',  on:true },
+  { id:'n4', title:'Daily wallpaper',       sub:'New wallpaper each morning', on:false }
+];
+
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+let users = {}; // email → { name, password, city, deity, lang, streak, lastOpen, favAartis, notifs }
+let currentUser = null;
+let currentScreen = '';
+let playerState = { aartiId: null, playing: false, progress: 0, timer: null };
+let wpFileCurrent = null;
+let aartiFilterCurrent = 'all';
+let wpFilterCurrent = 'all';
+
+// ═══════════════════════════════════════
+// STORAGE (artifact persistent storage)
+// ═══════════════════════════════════════
+async function saveUsers() {
+  try { await window.storage.set('divya-users', JSON.stringify(users)); } catch(e){}
+}
+async function loadUsers() {
+  try {
+    const r = await window.storage.get('divya-users');
+    if (r) users = JSON.parse(r.value);
+  } catch(e){}
+}
+async function saveSession(email) {
+  try { await window.storage.set('divya-session', email); } catch(e){}
+}
+async function loadSession() {
+  try {
+    const r = await window.storage.get('divya-session');
+    return r ? r.value : null;
+  } catch(e){ return null; }
+}
+async function clearSession() {
+  try { await window.storage.delete('divya-session'); } catch(e){}
+}
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+async function init() {
+  await loadUsers();
+  const sess = await loadSession();
+  setTimeout(async () => {
+    document.getElementById('loader').style.display = 'none';
+    if (sess && users[sess]) {
+      currentUser = sess;
+      updateStreak();
+      goTo('s-home');
+      buildHome();
+    } else {
+      goTo('s-splash');
+    }
+  }, 1200);
+}
+
+// ═══════════════════════════════════════
+// NAV
+// ═══════════════════════════════════════
+function goTo(id, sub) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  currentScreen = id;
+  if (id === 's-auth') switchToLogin();
+}
+
+const NAV_ITEMS = [
+  { id:'home',      label:'Home',     screen:'s-home',      svg:'<path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/>' },
+  { id:'aarti',     label:'Aarti',    screen:'s-aarti',     svg:'<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>' },
+  { id:'wallpapers',label:'Wallpapers',screen:'s-wallpapers',svg:'<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>' },
+  { id:'panchang',  label:'Panchang', screen:'s-panchang',  svg:'<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>' },
+  { id:'profile',   label:'Profile',  screen:'s-profile',   svg:'<path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>' }
+];
+
+function buildNav(containerId, activeId) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = NAV_ITEMS.map(item => `
+    <div class="bnav-item ${item.id===activeId?'on':''}" onclick="navTo('${item.id}')">
+      <svg viewBox="0 0 24 24">${item.svg}</svg>
+      <span>${item.label}</span>
+    </div>
+  `).join('');
+}
+
+function navTo(id) {
+  const item = NAV_ITEMS.find(n => n.id===id);
+  if (!item) return;
+  goTo(item.screen);
+  if (id==='home')       buildHome();
+  if (id==='aarti')      buildAarti();
+  if (id==='wallpapers') buildWallpapers();
+  if (id==='panchang')   buildPanchang();
+  if (id==='profile')    buildProfile();
+  NAV_ITEMS.forEach(n => {
+    const navs = document.querySelectorAll('.bnav-item');
+    navs.forEach(btn => {
+      if (btn.onclick && btn.onclick.toString().includes(`'${n.id}'`)) {
+        btn.classList.toggle('on', n.id===id);
+      }
+    });
+  });
+  buildNav('homeNav', id);
+  buildNav('wpNav', id);
+  buildNav('aartiNav', id);
+  buildNav('panchNav', id);
+  buildNav('profNav', id);
+}
+
+// ═══════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════
+function switchToLogin() {
+  document.getElementById('loginForm').style.display='block';
+  document.getElementById('signupForm').style.display='none';
+  document.getElementById('authIcon').textContent='🙏';
+  document.getElementById('authTitle').textContent='Welcome back';
+  document.getElementById('authSubtitle').textContent='Sign in to continue your daily practice';
+  document.getElementById('authErr').classList.remove('show');
+}
+function switchToSignup() {
+  document.getElementById('loginForm').style.display='none';
+  document.getElementById('signupForm').style.display='block';
+  document.getElementById('authIcon').textContent='✨';
+  document.getElementById('authTitle').textContent='Begin your journey';
+  document.getElementById('authSubtitle').textContent='Create your account to start your daily spiritual practice';
+  document.getElementById('authErr').classList.remove('show');
+}
+function showAuthErr(msg) {
+  const el = document.getElementById('authErr');
+  el.textContent = msg; el.classList.add('show');
+}
+
+async function doLogin() {
+  const email = document.getElementById('li-email').value.trim().toLowerCase();
+  const pass  = document.getElementById('li-pass').value;
+  if (!email || !pass) return showAuthErr('Please fill in all fields.');
+  if (!users[email]) return showAuthErr('No account found. Please sign up first.');
+  if (users[email].password !== btoa(pass)) return showAuthErr('Incorrect password.');
+  currentUser = email;
+  await saveSession(email);
+  updateStreak();
+  await saveUsers();
+  goTo('s-home');
+  buildHome();
+}
+
+async function doSignup() {
+  const name  = document.getElementById('su-name').value.trim();
+  const email = document.getElementById('su-email').value.trim().toLowerCase();
+  const pass  = document.getElementById('su-pass').value;
+  const city  = document.getElementById('su-city').value.trim();
+  if (!name||!email||!pass) return showAuthErr('Please fill name, email, and password.');
+  if (pass.length < 6) return showAuthErr('Password must be at least 6 characters.');
+  if (users[email]) return showAuthErr('This email is already registered. Sign in instead.');
+  users[email] = {
+    name, password: btoa(pass), city: city||'India',
+    deity: 'ganesha', lang: 'Hindi',
+    streak: 1, lastOpen: todayStr(),
+    favAartis: [],
+    notifs: { n1:true, n2:true, n3:true, n4:false },
+    joinedDate: todayStr()
+  };
+  currentUser = email;
+  await saveUsers();
+  await saveSession(email);
+  goTo('s-onboard');
+  buildOnboarding();
+}
+
+async function doLogout() {
+  await clearSession();
+  currentUser = null;
+  closeAllSheets();
+  goTo('s-splash');
+}
+
+function todayStr() { return new Date().toISOString().split('T')[0]; }
+
+function updateStreak() {
+  const u = users[currentUser];
+  if (!u) return;
+  const today = todayStr();
+  if (u.lastOpen === today) return;
+  const last = new Date(u.lastOpen||today);
+  const now = new Date(today);
+  const diff = Math.round((now - last) / 86400000);
+  if (diff === 1) { u.streak = (u.streak||0) + 1; }
+  else if (diff > 1) { u.streak = 1; }
+  u.lastOpen = today;
+  saveUsers();
+}
+
+// ═══════════════════════════════════════
+// ONBOARDING
+// ═══════════════════════════════════════
+let onboardSelDeity = 'ganesha';
+let onboardSelLang  = 'Hindi';
+let onboardStep = 0;
+
+function buildOnboarding() {
+  onboardStep = 0;
+  showOnboardStep(0);
+  // Deity grid
+  document.getElementById('deityGrid').innerHTML = DEITIES.map(d => `
+    <div class="deity-opt ${d.id===onboardSelDeity?'sel':''}" id="dopt-${d.id}" onclick="selDeity('${d.id}')">
+      <span class="deity-icon">${d.icon}</span>
+      <div><div class="deity-name">${d.name}</div><div class="deity-alt">${d.alt}</div></div>
+    </div>
+  `).join('');
+  // Lang grid
+  document.getElementById('langGrid').innerHTML = LANGS.map(l => `
+    <div class="lang-opt ${l===onboardSelLang?'sel':''}" id="lopt-${l}" onclick="selLang('${l}')">${l}</div>
+  `).join('');
+  // Notif opts
+  const u = users[currentUser];
+  document.getElementById('notifOpts').innerHTML = NOTIFS_DEF.map(n => `
+    <div class="notif-opt" onclick="toggleNotif('${n.id}',this)">
+      <div class="notif-opt-info"><div class="noi-title">${n.title}</div><div class="noi-sub">${n.sub}</div></div>
+      <div class="toggle ${(u.notifs&&u.notifs[n.id]!==false)?'on':''}" id="toggle-${n.id}"></div>
+    </div>
+  `).join('');
+}
+
+function selDeity(id) {
+  onboardSelDeity = id;
+  document.querySelectorAll('.deity-opt').forEach(el => el.classList.remove('sel'));
+  document.getElementById('dopt-'+id).classList.add('sel');
+}
+function selLang(l) {
+  onboardSelLang = l;
+  document.querySelectorAll('.lang-opt').forEach(el => el.classList.remove('sel'));
+  document.getElementById('lopt-'+l).classList.add('sel');
+}
+function toggleNotif(id, row) {
+  const tog = document.getElementById('toggle-'+id);
+  tog.classList.toggle('on');
+  if (!users[currentUser].notifs) users[currentUser].notifs = {};
+  users[currentUser].notifs[id] = tog.classList.contains('on');
+}
+
+const ONBOARD_STEPS = [
+  { title:'Choose your deity', sub:'We\'ll personalise your daily aarti and content around your chosen deity' },
+  { title:'Your language',     sub:'We\'ll show aarti lyrics and content in your preferred language' },
+  { title:'Daily reminders',   sub:'Set up gentle reminders to maintain your daily puja practice' }
+];
+
+function showOnboardStep(n) {
+  [0,1,2].forEach(i => {
+    document.getElementById('onboardStep'+i).style.display = i===n ? 'block':'none';
+    document.getElementById('od'+i).classList.toggle('on', i===n);
+  });
+  document.getElementById('onboardTitle').textContent = ONBOARD_STEPS[n].title;
+  document.getElementById('onboardSub').textContent   = ONBOARD_STEPS[n].sub;
+}
+
+async function onboardNext(step) {
+  const u = users[currentUser];
+  if (step===0) { u.deity = onboardSelDeity; showOnboardStep(1); onboardStep=1; }
+  else if (step===1) { u.lang = onboardSelLang; showOnboardStep(2); onboardStep=2; }
+  else if (step===2) {
+    await saveUsers();
+    goTo('s-home');
+    buildHome();
+    toast('🙏 Welcome to Divya, '+u.name.split(' ')[0]+'!');
+  }
+}
+
+// ═══════════════════════════════════════
+// HOME
+// ═══════════════════════════════════════
+function buildHome() {
+  const u = users[currentUser];
+  if (!u) return;
+  buildNav('homeNav','home');
+  const hour = new Date().getHours();
+  const greet = hour<12?'Good morning':'hour<17'?'Good afternoon':'Good evening';
+  const greetLabel = hour<12?'Good morning · 🙏':hour<17?'Good afternoon · 🙏':'Good evening · 🙏';
+  document.getElementById('homeGreetTime').textContent = greetLabel;
+  document.getElementById('homeGreetName').textContent = u.name.split(' ')[0]+',\nyour practice awaits';
+
+  // Tithi strip
+  document.getElementById('hTithi').textContent     = PANCHANG_DATA.tithi;
+  document.getElementById('hNakshatra').textContent = PANCHANG_DATA.nakshatra;
+  document.getElementById('hFestival').textContent  = 'Purnima · 4d';
+
+  // Today aarti — based on user's deity
+  const todayAarti = AARTIS.find(a => a.deity === u.deity) || AARTIS[0];
+  document.getElementById('homeAartiIcon').textContent = todayAarti.icon;
+  document.getElementById('homeAartiDeity').textContent = DEITIES.find(d=>d.id===u.deity)?.name || '';
+  document.getElementById('homeAartiName').textContent  = todayAarti.name;
+  document.getElementById('homeAartiHero').onclick = () => openPlayer(todayAarti.id);
+  document.getElementById('homePlayBtn').onclick = (e) => { e.stopPropagation(); openPlayer(todayAarti.id); };
+
+  // Wallpaper scroll — show user's deity first
+  const sorted = [...WALLPAPERS].sort((a,b)=> a.deity===u.deity?-1:b.deity===u.deity?1:0);
+  document.getElementById('homeWpScroll').innerHTML = sorted.map(wp => `
+    <div class="wp-thumb" onclick="openWpSheet('${wp.id}')">
+      <div class="wp-bg" style="background:${wp.bg}">${wp.icon}</div>
+      <div class="wp-type-tag ${wp.type==='image'?'wp-type-image':'wp-type-audio'}">${wp.type.toUpperCase()}</div>
+      <div class="wp-info-ov">
+        <div class="wp-deity-sm">${DEITIES.find(d=>d.id===wp.deity)?.name}</div>
+        <div class="wp-name-sm">${wp.name}</div>
+      </div>
+    </div>
+  `).join('');
+
+  // Streak
+  document.getElementById('streakNum').textContent = u.streak||1;
+  document.getElementById('streakSub').textContent = (u.streak||1)>=7 ? '🏆 Amazing! '+u.streak+' days strong!' : 'Keep going — '+((7-(u.streak||1)))+ ' days to your first milestone';
+
+  // Panchang mini
+  const pCells = [
+    { icon:'🌅', label:'Sunrise',      val:PANCHANG_DATA.sunrise },
+    { icon:'🌙', label:'Rahukaal',     val:PANCHANG_DATA.rahukaal },
+    { icon:'⭐', label:'Shubh Muhurta',val:PANCHANG_DATA.shubhMuhurta }
+  ];
+  document.getElementById('panchGrid').innerHTML = pCells.map(c => `
+    <div class="panch-cell">
+      <div class="pc-icon">${c.icon}</div>
+      <div class="pc-label">${c.label}</div>
+      <div class="pc-val">${c.val}</div>
+    </div>
+  `).join('');
+}
+
+// ═══════════════════════════════════════
+// WALLPAPERS
+// ═══════════════════════════════════════
+function buildWallpapers() {
+  buildNav('wpNav','wallpapers');
+  const filters = ['All','Image','Audio',...new Set(DEITIES.map(d=>d.name))];
+  document.getElementById('wpFilters').innerHTML = filters.map(f => `
+    <div class="filter-btn ${(f==='All'&&wpFilterCurrent==='all')||(f.toLowerCase()===wpFilterCurrent)?'on':''}" onclick="setWpFilter('${f}')">${f}</div>
+  `).join('');
+  renderWpGrid();
+}
+function setWpFilter(f) {
+  wpFilterCurrent = f==='All'?'all':f.toLowerCase();
+  buildWallpapers();
+}
+function renderWpGrid() {
+  let filtered = WALLPAPERS;
+  if (wpFilterCurrent!=='all') {
+    filtered = WALLPAPERS.filter(w =>
+      w.type===wpFilterCurrent ||
+      DEITIES.find(d=>d.id===w.deity)?.name.toLowerCase()===wpFilterCurrent
+    );
+  }
+  document.getElementById('wpGrid').innerHTML = filtered.map(wp => `
+    <div class="wp-card-lg" onclick="openWpSheet('${wp.id}')">
+      <div class="wc-bg" style="background:${wp.bg}">${wp.icon}</div>
+      <div class="wp-type-tag ${wp.type==='image'?'wp-type-image':'wp-type-audio'}" style="position:absolute;top:8px;right:8px">${wp.type.toUpperCase()}</div>
+      <div class="wc-ov">
+        <div class="wc-deity">${DEITIES.find(d=>d.id===wp.deity)?.name}</div>
+        <div class="wc-name">${wp.name}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+let currentWpId = null;
+function openWpSheet(id) {
+  currentWpId = id;
+  const wp = WALLPAPERS.find(w=>w.id===id);
+  if (!wp) return;
+  document.getElementById('wdsImg').style.background = wp.bg;
+  document.getElementById('wdsImg').textContent = wp.icon;
+  document.getElementById('wdsDeity').textContent = DEITIES.find(d=>d.id===wp.deity)?.name;
+  document.getElementById('wdsName').textContent = wp.name;
+  document.getElementById('wdsDesc').textContent = wp.desc;
+  openSheet('wpSheet');
+}
+function setWP(screen) {
+  closeSheet('wpSheet');
+  const wp = WALLPAPERS.find(w=>w.id===currentWpId);
+  toast(`✓ ${wp?.name} set as ${screen}`);
+}
+function shareWP() {
+  const wp = WALLPAPERS.find(w=>w.id===currentWpId);
+  toast(`🔗 Share link for "${wp?.name}" copied!`);
+}
+
+// ═══════════════════════════════════════
+// AARTI
+// ═══════════════════════════════════════
+function buildAarti() {
+  buildNav('aartiNav','aarti');
+  const filters = ['All',...new Set(DEITIES.map(d=>d.name)),'Favourites'];
+  document.getElementById('aartiFilters').innerHTML = filters.map(f => `
+    <div class="filter-btn ${(f==='All'&&aartiFilterCurrent==='all')||f.toLowerCase()===aartiFilterCurrent?'on':''}" onclick="setAartiFilter('${f}')">${f}</div>
+  `).join('');
+  renderAartiList();
+}
+function setAartiFilter(f) {
+  aartiFilterCurrent = f==='All'?'all':f.toLowerCase();
+  buildAarti();
+}
+function renderAartiList() {
+  const u = users[currentUser]||{};
+  let filtered = AARTIS;
+  if (aartiFilterCurrent==='favourites') {
+    filtered = AARTIS.filter(a => (u.favAartis||[]).includes(a.id));
+  } else if (aartiFilterCurrent!=='all') {
+    filtered = AARTIS.filter(a => DEITIES.find(d=>d.id===a.deity)?.name.toLowerCase()===aartiFilterCurrent);
+  }
+  const favs = u.favAartis||[];
+  document.getElementById('aartiList').innerHTML = filtered.length ? filtered.map(a => `
+    <div class="aarti-list-item">
+      <div class="ali-icon">${a.icon}</div>
+      <div class="ali-info">
+        <div class="ali-deity">${DEITIES.find(d=>d.id===a.deity)?.name}</div>
+        <div class="ali-name">${a.name}</div>
+        <div class="ali-meta">${a.duration} · With lyrics</div>
+      </div>
+      <div class="ali-fav ${favs.includes(a.id)?'faved':''}" onclick="quickFav('${a.id}',event)">
+        <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+      </div>
+      <div class="ali-play" onclick="openPlayer('${a.id}')">
+        <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+      </div>
+    </div>
+  `).join('') : '<div style="text-align:center;padding:40px 0;color:var(--muted);font-size:14px">No aartis here yet</div>';
+}
+
+async function quickFav(id, e) {
+  e.stopPropagation();
+  const u = users[currentUser];
+  if (!u) return;
+  if (!u.favAartis) u.favAartis = [];
+  const idx = u.favAartis.indexOf(id);
+  if (idx>-1) { u.favAartis.splice(idx,1); toast('Removed from favourites'); }
+  else { u.favAartis.push(id); toast('❤️ Added to favourites'); }
+  await saveUsers();
+  renderAartiList();
+}
+
+// ═══════════════════════════════════════
+// PLAYER
+// ═══════════════════════════════════════
+function openPlayer(id) {
+  const a = AARTIS.find(x=>x.id===id);
+  if (!a) return;
+  playerState.aartiId = id;
+  playerState.playing = false;
+  playerState.progress = 0;
+  clearInterval(playerState.timer);
+  document.getElementById('plIcon').textContent   = a.icon;
+  document.getElementById('plName').textContent   = a.name;
+  document.getElementById('plDeity').textContent  = DEITIES.find(d=>d.id===a.deity)?.name+' · '+a.duration;
+  document.getElementById('plLyrics').innerHTML   = a.lyrics.replace(/\n/g,'<br>');
+  document.getElementById('pcTotal').textContent  = a.duration;
+  document.getElementById('pcFill').style.width   = '0%';
+  document.getElementById('pcCurr').textContent   = '0:00';
+  updatePlayerFavBtn();
+  setPcIcon(false);
+  openSheet('playerSheet');
+}
+
+function togglePlay() {
+  if (!playerState.aartiId) return;
+  playerState.playing = !playerState.playing;
+  setPcIcon(playerState.playing);
+  if (playerState.playing) {
+    const a = AARTIS.find(x=>x.id===playerState.aartiId);
+    const parts = a.duration.split(':');
+    const totalSec = parseInt(parts[0])*60+parseInt(parts[1]);
+    const step = 100/(totalSec*2);
+    playerState.timer = setInterval(() => {
+      playerState.progress = Math.min(playerState.progress+step, 100);
+      document.getElementById('pcFill').style.width = playerState.progress+'%';
+      const elapsed = Math.round(playerState.progress/100*totalSec);
+      document.getElementById('pcCurr').textContent = Math.floor(elapsed/60)+':'+(elapsed%60+'').padStart(2,'0');
+      if (playerState.progress>=100) {
+        clearInterval(playerState.timer);
+        playerState.playing=false;
+        setPcIcon(false);
+        playerState.progress=0;
+      }
+    }, 500);
+  } else {
+    clearInterval(playerState.timer);
+  }
+}
+
+function setPcIcon(playing) {
+  document.getElementById('pcPlayIcon').outerHTML = playing
+    ? '<svg id="pcPlayIcon" viewBox="0 0 24 24" style="fill:#0A0812"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>'
+    : '<svg id="pcPlayIcon" viewBox="0 0 24 24" style="fill:#0A0812;margin-left:3px"><polygon points="5,3 19,12 5,21"/></svg>';
+}
+
+function prevAarti() {
+  const idx = AARTIS.findIndex(a=>a.id===playerState.aartiId);
+  if (idx>0) openPlayer(AARTIS[idx-1].id);
+}
+function nextAarti() {
+  const idx = AARTIS.findIndex(a=>a.id===playerState.aartiId);
+  if (idx<AARTIS.length-1) openPlayer(AARTIS[idx+1].id);
+}
+
+function updatePlayerFavBtn() {
+  const u = users[currentUser]||{};
+  const isFav = (u.favAartis||[]).includes(playerState.aartiId);
+  const btn = document.getElementById('pcFavBtn');
+  if (!btn) return;
+  btn.classList.toggle('faved', isFav);
+  btn.innerHTML = `
+    <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" style="width:16px;height:16px;stroke:currentColor;fill:${isFav?'currentColor':'none'}"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+    ${isFav?'Saved':'Add to favourites'}
+  `;
+}
+async function toggleFavAarti() {
+  const u = users[currentUser]; if(!u||!playerState.aartiId) return;
+  if (!u.favAartis) u.favAartis=[];
+  const idx=u.favAartis.indexOf(playerState.aartiId);
+  if (idx>-1) { u.favAartis.splice(idx,1); toast('Removed from favourites'); }
+  else { u.favAartis.push(playerState.aartiId); toast('❤️ Added to favourites'); }
+  await saveUsers();
+  updatePlayerFavBtn();
+}
+
+// ═══════════════════════════════════════
+// PANCHANG
+// ═══════════════════════════════════════
+function buildPanchang() {
+  buildNav('panchNav','panchang');
+  const now = new Date();
+  document.getElementById('panchDateLabel').textContent = now.toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('panchTitleLabel').textContent = "Today's Panchang";
+  const cells = [
+    { icon:'🌅', label:'Sunrise',       val:PANCHANG_DATA.sunrise },
+    { icon:'🌇', label:'Sunset',        val:PANCHANG_DATA.sunset  },
+    { icon:'📿', label:'Tithi',         val:PANCHANG_DATA.tithi   },
+    { icon:'⭐', label:'Nakshatra',     val:PANCHANG_DATA.nakshatra},
+    { icon:'🔮', label:'Yoga',          val:PANCHANG_DATA.yoga    },
+    { icon:'🌙', label:'Rahukaal',      val:PANCHANG_DATA.rahukaal},
+    { icon:'✨', label:'Shubh Muhurta', val:PANCHANG_DATA.shubhMuhurta },
+    { icon:'🪷', label:'Auspicious',    val:PANCHANG_DATA.auspicious}
+  ];
+  const grid = document.getElementById('panchGridFull');
+  grid.style.gridTemplateColumns='1fr 1fr';
+  grid.innerHTML = cells.map(c=>`
+    <div class="panch-cell">
+      <div class="pc-icon">${c.icon}</div>
+      <div class="pc-label">${c.label}</div>
+      <div class="pc-val">${c.val}</div>
+    </div>
+  `).join('');
+  document.getElementById('festivalList').innerHTML = FESTIVALS.map(f=>`
+    <div class="festival-item">
+      <div class="fest-date"><div class="fd-day">${f.day}</div><div class="fd-mon">${f.month}</div></div>
+      <div class="fest-info"><div class="fi-name">${f.name}</div><div class="fi-desc">${f.desc}</div></div>
+    </div>
+  `).join('');
+}
+
+// ═══════════════════════════════════════
+// PROFILE
+// ═══════════════════════════════════════
+function buildProfile() {
+  buildNav('profNav','profile');
+  const u = users[currentUser];
+  if (!u) return;
+  const initial = u.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('profAv').textContent   = initial;
+  document.getElementById('profName').textContent = u.name;
+  document.getElementById('profEmail').textContent= currentUser;
+  document.getElementById('profStreak').textContent= u.streak||1;
+  document.getElementById('profFavs').textContent  = (u.favAartis||[]).length;
+  const joined = new Date(u.joinedDate||todayStr());
+  const days = Math.max(1,Math.round((new Date()-joined)/86400000));
+  document.getElementById('profDays').textContent  = days;
+  const deity = DEITIES.find(d=>d.id===u.deity);
+  document.getElementById('profDeity').textContent= deity?deity.icon+' '+deity.name:u.deity;
+  document.getElementById('profLang').textContent = u.lang||'Hindi';
+  document.getElementById('profCity').textContent = u.city||'India';
+}
+
+function openSheet(id) {
+  if (id==='editProfileSheet') fillEditProfile();
+  if (id==='favSheet') buildFavSheet();
+  if (id==='notifSheet') buildNotifSheet();
+  document.getElementById(id).classList.add('open');
+}
+function closeSheet(id) {
+  document.getElementById(id).classList.remove('open');
+  if (id==='playerSheet') { clearInterval(playerState.timer); playerState.playing=false; }
+}
+function closeAllSheets() {
+  document.querySelectorAll('.sheet').forEach(s=>s.classList.remove('open'));
+}
+
+function fillEditProfile() {
+  const u = users[currentUser]; if(!u) return;
+  document.getElementById('ep-name').value = u.name;
+  document.getElementById('ep-city').value = u.city||'';
+  const deitySelect = document.getElementById('ep-deity');
+  deitySelect.innerHTML = DEITIES.map(d=>`<option value="${d.id}" ${d.id===u.deity?'selected':''}>${d.icon} ${d.name}</option>`).join('');
+  document.getElementById('ep-lang').value = u.lang||'Hindi';
+}
+async function saveProfile() {
+  const u = users[currentUser]; if(!u) return;
+  const name = document.getElementById('ep-name').value.trim();
+  const city = document.getElementById('ep-city').value.trim();
+  const deity= document.getElementById('ep-deity').value;
+  const lang = document.getElementById('ep-lang').value;
+  if (!name) return toast('Name cannot be empty');
+  u.name=name; u.city=city; u.deity=deity; u.lang=lang;
+  await saveUsers();
+  closeSheet('editProfileSheet');
+  buildProfile();
+  buildHome();
+  toast('✓ Profile updated');
+}
+
+function buildFavSheet() {
+  const u = users[currentUser]||{};
+  const favs = (u.favAartis||[]);
+  const favAartis = AARTIS.filter(a=>favs.includes(a.id));
+  document.getElementById('favList').innerHTML = favAartis.length
+    ? favAartis.map(a=>`
+      <div class="aarti-list-item" onclick="openPlayer('${a.id}')">
+        <div class="ali-icon">${a.icon}</div>
+        <div class="ali-info">
+          <div class="ali-deity">${DEITIES.find(d=>d.id===a.deity)?.name}</div>
+          <div class="ali-name">${a.name}</div>
+          <div class="ali-meta">${a.duration}</div>
+        </div>
+        <div class="ali-play"><svg viewBox="0 0 24 24" style="fill:var(--saffron)"><polygon points="5,3 19,12 5,21"/></svg></div>
+      </div>
+    `).join('')
+    : '<div style="text-align:center;padding:40px 0;color:var(--muted);font-size:14px">No favourites yet.<br>Tap ❤️ on any aarti to save it here.</div>';
+}
+
+function buildNotifSheet() {
+  const u = users[currentUser]||{};
+  document.getElementById('notifSettingsList').innerHTML = NOTIFS_DEF.map(n=>`
+    <div class="notif-opt" onclick="toggleNotif2('${n.id}')">
+      <div class="notif-opt-info"><div class="noi-title">${n.title}</div><div class="noi-sub">${n.sub}</div></div>
+      <div class="toggle ${(u.notifs&&u.notifs[n.id]!==false)?'on':''}" id="ntog-${n.id}"></div>
+    </div>
+  `).join('');
+}
+function toggleNotif2(id) {
+  const tog = document.getElementById('ntog-'+id);
+  tog.classList.toggle('on');
+  if (!users[currentUser].notifs) users[currentUser].notifs={};
+  users[currentUser].notifs[id] = tog.classList.contains('on');
+}
+async function saveNotifs() {
+  await saveUsers();
+  closeSheet('notifSheet');
+  toast('✓ Notification preferences saved');
+}
+
+// ═══════════════════════════════════════
+// SHEET CLOSE ON BACKDROP
+// ═══════════════════════════════════════
+document.querySelectorAll('.sheet').forEach(sheet => {
+  sheet.addEventListener('click', function(e) {
+    if (e.target === this) {
+      this.classList.remove('open');
+      if (this.id==='playerSheet') { clearInterval(playerState.timer); playerState.playing=false; }
+    }
+  });
+});
+
+// ═══════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════
+let toastTimer = null;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.display = 'block';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { el.style.display='none'; }, 2500);
+}
+
+// ── START ──
+init();
+</script>
+</body>
+</html>
